@@ -19,18 +19,20 @@ body{
     transition:1s;
 }
 
-/* CENTER TEXT */
+/* START TEXT */
 .start{
-    font-size:30px;
+    font-size:26px;
     color:#ff1493;
     font-weight:bold;
     text-align:center;
     cursor:pointer;
+    padding:20px;
 }
 
 /* IMAGE */
 img{
-    width:280px;
+    width:80%;
+    max-width:300px;
     border-radius:20px;
     opacity:0;
     transform:scale(0.8);
@@ -44,15 +46,18 @@ img{
 /* MESSAGE */
 .message{
     position:fixed;
-    bottom:60px;
+    bottom:30px;
     left:50%;
     transform:translateX(-50%);
     background: rgba(0,0,0,0.5);
     color:white;
-    padding:12px 20px;
+    padding:10px 18px;
     border-radius:15px;
-    font-size:20px;
+    font-size:18px;
     font-weight:bold;
+    text-align:center;
+    width:90%;
+    max-width:350px;
 }
 
 /* HEARTS */
@@ -74,7 +79,7 @@ img{
 Do you wanna see the Prettiest of all time? 💖
 </div>
 
-<img id="photo" class="hidden">
+<img id="photo">
 <div id="msg" class="message" style="display:none;"></div>
 
 <script>
@@ -84,27 +89,28 @@ const photo = document.getElementById('photo');
 const msg = document.getElementById('msg');
 
 let step = 0;
+let started = false;
 
-// 💬 Compliments (blush guaranteed 😏)
+// TEXTS
 const texts = [
 "OMG… those bangles 😳💖",
-"Ohhh the cutenesssss 😩✨",
-"Wao wao… the prettiest girl omg 😍🔥",
-"This beauty ? Illegal 😤❤️",
-"HOW ARE YOU THIS PERFECT 😳💫",
-"You getting prettier and prettier every second 💖",
-" wao wao wao I'm Blushing 😍",
-"I'm Speecheless 😶‍🌫️💘",
-"There is No Competition 🥺❤️"
+"Ohhh the cuteness… I can't 😩✨",
+"Wao wao… the prettiest girl alive 😍🔥",
+"This smile?? illegal 😤❤️",
+"How are you THIS perfect?? 😳💫",
+"I swear you get prettier every second 💖",
+"This one… my favorite 😍",
+"I’m actually speechless now 😶‍🌫️💘",
+"Prettiest of all time… no competition 🥺❤️"
 ];
 
-// 📸 Images
+// IMAGES
 const images = [
 "18.png","19.png","20.png","21.png","22.png",
 "23.png","24.png","25.png","26.png"
 ];
 
-// ❤️ floating hearts
+// HEARTS
 setInterval(()=>{
  let h=document.createElement("div");
  h.className="heart";
@@ -115,7 +121,7 @@ setInterval(()=>{
  setTimeout(()=>h.remove(),6000);
 },300);
 
-// ✨ typing effect
+// TEXT EFFECT
 function typeText(text){
  msg.style.display="block";
  msg.innerHTML="";
@@ -127,34 +133,27 @@ function typeText(text){
   if(i>=text.length){
     clearInterval(interval);
   }
- },40);
+ },35);
 }
 
-// 🚀 START
-start.onclick = ()=>{
+// START CLICK (MOBILE + PC)
+function startFlow(){
+ if(started) return;
+ started = true;
  start.style.display="none";
  showNext();
-};
+}
 
-// 📸 NEXT IMAGE
-document.body.onclick = ()=>{
- if(start.style.display==="none" && step <= images.length){
-   showNext();
- }
-};
-
+// NEXT STEP
 function showNext(){
 
- // 🚫 STOP after last image
- if(step === images.length){
+ if(step >= images.length){
    typeText("Even the moon blushes when it sees you 🌙💖");
-   
-   // disable further clicks
-   document.body.onclick = null;
+   document.removeEventListener("click", handleClick);
+   document.removeEventListener("touchstart", handleClick);
    return;
  }
 
- // NORMAL FLOW
  photo.classList.remove("show");
 
  setTimeout(()=>{
@@ -162,16 +161,21 @@ function showNext(){
    photo.classList.add("show");
    typeText(texts[step]);
    step++;
- },300);
+ },200);
 }
 
- photo.src = images[step];
- photo.classList.add("show");
-
- typeText(texts[step]);
-
- step++;
+// UNIVERSAL CLICK HANDLER
+function handleClick(){
+ if(!started){
+   startFlow();
+ } else {
+   showNext();
+ }
 }
+
+// EVENTS (PC + MOBILE)
+document.addEventListener("click", handleClick);
+document.addEventListener("touchstart", handleClick);
 
 </script>
 
