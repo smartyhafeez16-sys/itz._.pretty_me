@@ -138,17 +138,32 @@ start.onclick = ()=>{
 
 // 📸 NEXT IMAGE
 document.body.onclick = ()=>{
- if(start.style.display==="none"){
+ if(start.style.display==="none" && step <= images.length){
    showNext();
  }
 };
 
 function showNext(){
 
- if(step >= images.length){
-   typeText("Okay… itnaaa pyari  😩💖");
+ // 🚫 STOP after last image
+ if(step === images.length){
+   typeText("Even the moon blushes when it sees you 🌙💖");
+   
+   // disable further clicks
+   document.body.onclick = null;
    return;
  }
+
+ // NORMAL FLOW
+ photo.classList.remove("show");
+
+ setTimeout(()=>{
+   photo.src = images[step];
+   photo.classList.add("show");
+   typeText(texts[step]);
+   step++;
+ },300);
+}
 
  photo.src = images[step];
  photo.classList.add("show");
