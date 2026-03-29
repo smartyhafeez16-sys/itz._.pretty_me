@@ -16,10 +16,9 @@ body{
     background: linear-gradient(#ff9ecf,#ffe6f2);
     font-family: Arial, sans-serif;
     overflow:hidden;
-    transition:1s;
 }
 
-/* START TEXT */
+/* START SCREEN */
 .start{
     font-size:26px;
     color:#ff1493;
@@ -36,7 +35,7 @@ img{
     border-radius:20px;
     opacity:0;
     transform:scale(0.8);
-    transition:1s;
+    transition:0.8s;
 }
 .show{
     opacity:1;
@@ -79,7 +78,7 @@ img{
 Do you wanna see the Prettiest of all time? 💖
 </div>
 
-<img id="photo">
+<img id="photo" style="display:none;">
 <div id="msg" class="message" style="display:none;"></div>
 
 <script>
@@ -94,14 +93,14 @@ let started = false;
 // TEXTS
 const texts = [
 "OMG… those bangles 😳💖",
-"Ohhh the cuteness ... I cant 😩✨",
-"Wao wao the prettiest 😍🔥",
-"This Beauty? illegal  😤❤️",
-"OMggg this perfect 😳💫",
-"You getting prettier every second 💖",
-"This one 😍",
-"I am Actually speechless Now 😶‍🌫️💘",
-"Prettiest of all time Literally 🥺❤️"
+"Ohhh the cuteness… I can't 😩✨",
+"Wao wao… the prettiest girl alive 😍🔥",
+"This smile?? illegal 😤❤️",
+"How are you THIS perfect?? 😳💫",
+"I swear you get prettier every second 💖",
+"This one… my favorite 😍",
+"I’m actually speechless now 😶‍🌫️💘",
+"Prettiest of all time… no competition 🥺❤️"
 ];
 
 // IMAGES
@@ -136,21 +135,23 @@ function typeText(text){
  },35);
 }
 
-// START CLICK (MOBILE + PC)
-function startFlow(){
- if(started) return;
- started = true;
+// START BUTTON ONLY CLICKABLE FIRST
+start.onclick = function(e){
+ e.stopPropagation(); // 🔥 important fix
  start.style.display="none";
+ photo.style.display="block";
+ started = true;
  showNext();
-}
+};
 
-// NEXT STEP
-function showNext(){
+// MAIN CLICK FLOW
+document.body.onclick = function(){
+
+ if(!started) return;
 
  if(step >= images.length){
    typeText("Even the moon blushes when it sees you 🌙💖");
-   document.removeEventListener("click", handleClick);
-   document.removeEventListener("touchstart", handleClick);
+   document.body.onclick = null; // stop further clicks
    return;
  }
 
@@ -162,20 +163,7 @@ function showNext(){
    typeText(texts[step]);
    step++;
  },200);
-}
-
-// UNIVERSAL CLICK HANDLER
-function handleClick(){
- if(!started){
-   startFlow();
- } else {
-   showNext();
- }
-}
-
-// EVENTS (PC + MOBILE)
-document.addEventListener("click", handleClick);
-document.addEventListener("touchstart", handleClick);
+};
 
 </script>
 
